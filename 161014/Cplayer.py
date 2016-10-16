@@ -1,10 +1,10 @@
 from pico2d import *
-import CBullet
-import os
+from sdl2 import *
 
 
 class Player:
     image = None
+    # point = None
 
     FORWARD, LEFT, RIGHT = 0, 1, 2
     CHAR1, CHAR2, CHAR3 = 0, 1, 2
@@ -16,18 +16,19 @@ class Player:
         self.theta = math.radians(90)
         self.state = self.FORWARD
         self.x, self.y = 400, 300
-        if kind is self.CHAR1:
-            self.width = 16
-            self.height = 40
-            self.speed = 2.4
-            self.dtheta = 2.4
-            self.bullet_type = self.ROUND
-        self.barrel_x = self.x + math.cos(self.theta) * self.width
-        self.barrel_y = self. y + math.sin(self.theta) * self.height
+        if kind is self.CHAR2:
+            self.width = 18
+            self.height = 25
+            self.speed = 3.5
+            self.dtheta = 4.5
+            self.bullet_type = self.LONG
+        self.barrel_x = self.x + math.cos(self.theta) * self.height
+        self.barrel_y = self.y + math.sin(self.theta) * self.height
+        self.nozzle_x = self.x - math.cos(self.theta) * self.height
+        self.nozzle_y = self.y - math.sin(self.theta) * self.height
         if Player.image is None:
-            os.chdir('resource/image')
-            Player.image = load_image('ship%d.png' % self.kind)
-            os.chdir('../..')
+            Player.image = load_image('resource/image/ship%d.png' % self.kind)
+            # Player.point = load_image('resource/image/point.png')
 
     def update(self):
         if self.state is self.RIGHT:
@@ -36,9 +37,15 @@ class Player:
             self.theta += math.radians(self.dtheta)
         self.x += math.cos(self.theta) * self.speed
         self.y += math.sin(self.theta) * self.speed
+        self.barrel_x = self.x + math.cos(self.theta) * self.height
+        self.barrel_y = self.y + math.sin(self.theta) * self.height
+        self.nozzle_x = self.x - math.cos(self.theta) * self.height
+        self.nozzle_y = self.y - math.sin(self.theta) * self.height
 
     def draw(self):
         self.image.rotate_draw(self.theta - math.radians(90), self.x, self.y, None, None)
+        # self.point.draw_now(self.barrel_x, self.barrel_y)
+
 
     def handle_event(self, event):
         if(event.type, event.key) == (SDL_KEYDOWN, SDLK_a):
@@ -51,4 +58,3 @@ class Player:
         elif(event.type, event.key) == (SDL_KEYUP, SDLK_d):
             if self.state is self.RIGHT:
                 self.state = self.FORWARD
-        # elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_w):
