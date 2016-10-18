@@ -1,12 +1,12 @@
-from pico2d import *
 from Cplayer import *
 import CBullet
 import Cparticle
 import game_framework
 
 name = "GameState"
-player = None
+player0 = None
 back_image = None
+time = None
 bullet_list = []
 particle_list = []
 canvas_width = 1280
@@ -14,40 +14,44 @@ canvas_height = 800
 
 
 def enter():
-    global player
+    global player0
     global back_image
-    open_canvas(canvas_width, canvas_height)
+    global time
+    time = 0
+    open_canvas(canvas_width, canvas_height, sync=True)
     back_image = load_image('resource/image/back_gamestate.png')
-    player = Player(1)
+    player0 = Player(1)
+
 
 
 def exit():
-    global player
+    global player0
     global bullet_list
     global particle_list
-    del(player)
+    del(player0)
     del(bullet_list)
     del(particle_list)
     close_canvas()
 
 
 def update():
-    player.update()
-    particle_list.append(Cparticle.Particle(player.nozzle_x, player.nozzle_y, 10))
+    global time
+    player0.update()
+    if time % 3 is 0:
+        particle_list.append(Cparticle.Particle(player0.nozzle_x, player0.nozzle_y, 5))
+    if time % player0.fire_rate is 0:
+        bullet_list.append(CBullet.Bullet(player0))
     if bullet_list.count is not 0:
         for bullet in bullet_list:
-            i = 0
             bullet.update()
             if bullet.x > canvas_width - 80 or bullet.x < 80 or bullet.y > canvas_height - 80 or bullet.y < 80:
-                bullet_list.pop(i)
-            i += 1
+                bullet_list.remove(bullet)
     if particle_list.count is not 0:
         for par in particle_list:
-            i = 0
             par.update()
             if par.cursize <= 0:
-                particle_list.pop(i)
-            i += 1
+                particle_list.remove(par)
+    time += 1
     delay(0.01)
 
 
@@ -61,7 +65,7 @@ def draw():
     if particle_list.count is not 0:
         for par in particle_list:
             par.draw()
-    player.draw()
+    player0.draw()
     update_canvas()
 
 
@@ -72,10 +76,10 @@ def handle_events():
             game_framework.quit()
         elif event.type is SDL_KEYDOWN and event.key is SDLK_ESCAPE:
             game_framework.quit()
-        elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_w):
-            bullet_list.append(CBullet.Bullet(player))
+        # elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_w):
+            # bullet_list.append(CBullet.Bullet(player))
         else:
-            player.handle_event(event)
+            player0.handle_event(event)
 
 
 def pause():

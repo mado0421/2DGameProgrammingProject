@@ -1,10 +1,12 @@
 from pico2d import *
-from sdl2 import *
 
 
 class Player:
-    image = None
-    # point = None
+    # PIXEL_PER_METER = (10.0 / 0.3)
+    # RUN_SPEED_KMPH = 20.0
+    # RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
+    # RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
+    # RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 
     FORWARD, LEFT, RIGHT = 0, 1, 2
     CHAR1, CHAR2, CHAR3 = 0, 1, 2
@@ -12,31 +14,44 @@ class Player:
 
     def __init__(self, kind):
         self.kind = kind
+        self.image = load_image('resource/image/ship%d.png' % self.kind)
         self.team = 0
         self.theta = math.radians(90)
         self.state = self.FORWARD
-        self.x, self.y = 400, 300
-        if kind is self.CHAR2:
+        if kind is self.CHAR1:
+            self.x, self.y = 400, 300
             self.width = 18
             self.height = 25
             self.speed = 3.5
             self.dtheta = 4.5
+            self.bullet_type = self.ROUND
+            self.fire_rate = 10
+        if kind is self.CHAR2:
+            self.x, self.y = 600, 300
+            self.width = 18
+            self.height = 29
+            self.speed = 3.2
+            self.dtheta = 4.0
             self.bullet_type = self.LONG
+            self.fire_rate = 15
         self.barrel_x = self.x + math.cos(self.theta) * self.height
         self.barrel_y = self.y + math.sin(self.theta) * self.height
         self.nozzle_x = self.x - math.cos(self.theta) * self.height
         self.nozzle_y = self.y - math.sin(self.theta) * self.height
-        if Player.image is None:
-            Player.image = load_image('resource/image/ship%d.png' % self.kind)
-            # Player.point = load_image('resource/image/point.png')
+        # if Player.image is None:
+            # Player.image = load_image('resource/image/ship%d.png' % self.kind)
 
     def update(self):
         if self.state is self.RIGHT:
             self.theta -= math.radians(self.dtheta)
         elif self.state is self.LEFT:
             self.theta += math.radians(self.dtheta)
-        self.x += math.cos(self.theta) * self.speed
-        self.y += math.sin(self.theta) * self.speed
+
+        # distance = Player.RUN_SPEED_PPS * frame_time
+        # self.total_frames += 1.0
+
+        self.x += math.cos(self.theta) * self.speed  # * distance
+        self.y += math.sin(self.theta) * self.speed  # * distance
         self.barrel_x = self.x + math.cos(self.theta) * self.height
         self.barrel_y = self.y + math.sin(self.theta) * self.height
         self.nozzle_x = self.x - math.cos(self.theta) * self.height
@@ -44,8 +59,6 @@ class Player:
 
     def draw(self):
         self.image.rotate_draw(self.theta - math.radians(90), self.x, self.y, None, None)
-        # self.point.draw_now(self.barrel_x, self.barrel_y)
-
 
     def handle_event(self, event):
         if(event.type, event.key) == (SDL_KEYDOWN, SDLK_a):

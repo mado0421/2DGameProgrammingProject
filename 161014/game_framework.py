@@ -38,6 +38,7 @@ class TestGameState:
 
 running = None
 stack = None
+# current_time =None
 
 
 def change_state(state):
@@ -74,14 +75,22 @@ def quit():
 
 
 def run(start_state):
-    global running, stack
+    global running, stack # , current_time
+    # current_time = get_time()
     running = True
     stack = [start_state]   # 스택을 리스트로 구현함
     start_state.enter()     # 현재 상태의 enter()를 호출함
     while (running):
+        # frame_time = get_frame_time()
         stack[-1].handle_events()   # 스택의 마지막 상태의 ~()를 호출함
         stack[-1].update()          # update()에서 상태를 바꿔주는걸 넣어놓기 때문에 이 때 바뀜
+
         stack[-1].draw()
+
+        # frame_time = get_time() - current_time
+        # frame_rate = 1.0 / frame_time
+        # print("Frame Rate: %f fps, Frame Time: %f sec, " %(frame_rate, frame_time))
+        # current_time += frame_time
     # repeatedly delete the top of the stack
     while (len(stack) > 0):
         stack[-1].exit()
