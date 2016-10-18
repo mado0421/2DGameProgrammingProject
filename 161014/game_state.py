@@ -1,12 +1,16 @@
-from Cplayer import *
+from pico2d import *
+import random
+import Cplayer
 import CBullet
 import Cparticle
+import CEnemy
 import game_framework
 
 name = "GameState"
 player0 = None
 back_image = None
 time = None
+enemy_list = []
 bullet_list = []
 particle_list = []
 canvas_width = 1280
@@ -20,27 +24,29 @@ def enter():
     time = 0
     open_canvas(canvas_width, canvas_height, sync=True)
     back_image = load_image('resource/image/back_gamestate.png')
-    player0 = Player(1)
-
+    player0 = Cplayer.Player(1)
 
 
 def exit():
     global player0
-    global bullet_list
-    global particle_list
+    global bullet_list, particle_list, enemy_list
     del(player0)
     del(bullet_list)
     del(particle_list)
+    del(enemy_list)
     close_canvas()
 
 
 def update():
-    global time
+    global time, enemy_list
     player0.update()
     if time % 3 is 0:
         particle_list.append(Cparticle.Particle(player0.nozzle_x, player0.nozzle_y, 5))
     if time % player0.fire_rate is 0:
         bullet_list.append(CBullet.Bullet(player0))
+    if time % 100 is 0:
+        enemy_list.append(CEnemy.Enemy(random.randint(0, 1)))
+
     if bullet_list.count is not 0:
         for bullet in bullet_list:
             bullet.update()
@@ -51,6 +57,12 @@ def update():
             par.update()
             if par.cursize <= 0:
                 particle_list.remove(par)
+    if enemy_list.count is not 0:
+        for enemy in enemy_list:
+            enemy.update()
+            if not (0 - enemy.width <= enemy.x <= canvas_width + enemy.width):
+                enemy_list.remove(enemy)
+
     time += 1
     delay(0.01)
 
@@ -59,6 +71,9 @@ def draw():
     clear_canvas()
     back_image.draw(canvas_width/2, canvas_height/2)
     # player.draw()
+    if enemy_list.count is not 0:
+        for enemy in enemy_list:
+            enemy.draw()
     if bullet_list.count is not 0:
         for bullet in bullet_list:
             bullet.draw()

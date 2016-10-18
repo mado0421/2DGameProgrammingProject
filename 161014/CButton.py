@@ -15,7 +15,7 @@ class Button:
 
     def handle_event(self, event):
         if event.type is SDL_MOUSEMOTION:
-
+            pass
 
     def draw(self):
         if self.on is True:
