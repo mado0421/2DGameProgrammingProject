@@ -16,18 +16,22 @@ class Enemy:
             self.width = 32
             self.height = 32
             self.speed = 1.2
+            self.health = 2
         elif kind is Enemy.BIG_ROCK:
             self.width = 64
             self.height = 64
             self.speed = 0.6
+            self.health = 4
         elif kind is Enemy.SHIP:
             self.width = 17
             self.height = 28
             self.speed = 1.4
+            self.health = 2
         elif kind is Enemy.F_SHIP:
             self.width = 25
             self.height = 23
             self.speed = 1.8
+            self.health = 2
 
         if random.randint(0, 1) is 0:
             self.way = 1
@@ -44,6 +48,23 @@ class Enemy:
         self.nozzle_x = self.x - math.cos(self.theta) * self.height
         self.nozzle_y = self.y - math.sin(self.theta) * self.height
 
+    def isDead(self):
+        if self.health <= 0:
+            return True
+
+    def isOut(self, cw, ch, cb):
+        if self.x > cw + cb or self.x < (-cb) or self.y > ch + cb or self.y < (-cb):
+            return True
+
+    def isCollide(self, other):
+        if self.team is not other.team:
+            if (self.x - self.width <= other.x + other.width and
+                self.y - self.width <= other.y + other.width and
+                self.x + self.width >= other.x - other.width and
+                self.y + self.width >= other.y - other.width):
+                    other.health -= 1
+                    return True
+
     def update(self):
         self.x += self.way * self.speed
         if self.kind is Enemy.ROCK or self.kind is Enemy.BIG_ROCK:
@@ -54,4 +75,4 @@ class Enemy:
 
     def draw(self):
         self.image.rotate_draw(self.theta - math.radians(90), self.x, self.y)
-        draw_rectangle(self.x - self.width, self.y - self.height, self.x + self.width, self.y + self.height)
+        draw_rectangle(self.x - self.width, self.y - self.width, self.x + self.width, self.y + self.width)

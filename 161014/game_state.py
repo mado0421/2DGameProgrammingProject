@@ -42,7 +42,7 @@ def update():
     global time, enemy_list
 
     player0.update()
-    if player0.isOut(canvas_width, canvas_height, canvas_boundary):
+    if player0.isOut(canvas_width, canvas_height, canvas_boundary) or player0.isDead():
         game_framework.quit()
 
     if time % 3 is 0:
@@ -51,18 +51,21 @@ def update():
         bullet_list.append(CBullet.Bullet(player0))
     if time % 100 is 0:
         # enemy_list.append(CEnemy.Enemy(random.randint(0, 2)))
-        enemy_list.append(CEnemy.Enemy(random.randint(2, 3)))
-
+        enemy_list.append(CEnemy.Enemy(random.randint(0, 3)))
 
     if bullet_list.count is not 0:
         for bullet in bullet_list:
             bullet.update()
-            if bullet.isOut(canvas_width, canvas_height, canvas_boundary):
+            if bullet.isOut(canvas_width, canvas_height, canvas_boundary) or bullet.isCollide(player0):
                 bullet_list.remove(bullet)
+            if enemy_list.count is not 0:
+                for enemy in enemy_list:
+                    if bullet.isCollide(enemy):
+                        bullet_list.remove(bullet)
     if enemy_list.count is not 0:
         for enemy in enemy_list:
             enemy.update()
-            if not (0 - enemy.width <= enemy.x <= canvas_width + enemy.width):
+            if enemy.isOut(canvas_width, canvas_height, canvas_boundary) or enemy.isDead() or enemy.isCollide(player0):
                 enemy_list.remove(enemy)
             if (enemy.kind is enemy.SHIP or enemy.kind is enemy.F_SHIP) and time % 3 is 0:
                 particle_list.append(CParticle.Particle(enemy.nozzle_x, enemy.nozzle_y, 5))
