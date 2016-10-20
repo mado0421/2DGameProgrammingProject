@@ -25,7 +25,7 @@ def enter():
     time = 0
     open_canvas(canvas_width, canvas_height, sync=True)
     back_image = load_image('resource/image/back_gamestate.png')
-    player0 = CPlayer.Player(1)
+    player0 = CPlayer.Player(0)
 
 
 def exit():
@@ -50,19 +50,19 @@ def update():
     if time % player0.fire_rate is 0:
         bullet_list.append(CBullet.Bullet(player0))
     if time % 100 is 0:
-        # enemy_list.append(CEnemy.Enemy(random.randint(0, 2)))
         enemy_list.append(CEnemy.Enemy(random.randint(0, 3)))
+        # enemy_list.append(CEnemy.Enemy(3))
 
     if bullet_list.count is not 0:
         for bullet in bullet_list:
             bullet.update()
+            if bullet.isOut(canvas_width, canvas_height, canvas_boundary) or bullet.isCollide(player0):
+                bullet_list.remove(bullet)
+                continue
             if enemy_list.count is not 0:
                 for enemy in enemy_list:
                     if bullet.isCollide(enemy):
                         bullet_list.remove(bullet)
-                        continue
-            if bullet.isOut(canvas_width, canvas_height, canvas_boundary) or bullet.isCollide(player0):
-                bullet_list.remove(bullet)
 
     if enemy_list.count is not 0:
         for enemy in enemy_list:
@@ -71,6 +71,8 @@ def update():
                 enemy_list.remove(enemy)
             if (enemy.kind is enemy.SHIP or enemy.kind is enemy.F_SHIP) and time % 3 is 0:
                 particle_list.append(CParticle.Particle(enemy.nozzle_x, enemy.nozzle_y, 5))
+            if enemy.kind is enemy.F_SHIP:
+                enemy.Set_Theta(player0)
 
     if particle_list.count is not 0:
         for par in particle_list:

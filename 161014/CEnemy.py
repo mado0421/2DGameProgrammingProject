@@ -49,7 +49,31 @@ class Enemy:
         self.nozzle_y = self.y - math.sin(self.theta) * self.height
 
     def Set_Theta(self, other):
-        self.x
+        w = self.x - other.x
+        h = self.y - other.y
+        r = math.sqrt(w * w + h * h)
+        if r is 0:
+            self.theta = 0
+        else:
+            if w < 0:
+                if h < 0:
+                    self.theta = -math.acos(w/r) + math.radians(180)
+                elif h > 0:
+                    self.theta = math.acos(w/r) + math.radians(180)
+                else:
+                    self.theta = 0
+            elif w > 0:
+                if h < 0:
+                    self.theta = -math.acos(w/r) + math.radians(180)
+                elif h > 0:
+                    self.theta = math.acos(w/r) + math.radians(180)
+                else:
+                    self.theta = math.radians(180)
+            elif w is 0:
+                if h < 0:
+                    self.theta = math.radians(90)
+                elif h > 0:
+                    self.theta = math.radians(270)
 
     def isDead(self):
         if self.health <= 0:
@@ -69,10 +93,15 @@ class Enemy:
                     return True
 
     def update(self):
-        self.x += self.way * self.speed
+
         if self.kind is Enemy.ROCK or self.kind is Enemy.BIG_ROCK:
             self.theta += math.radians(2.2)
+            self.x += self.way * self.speed
         else:
+            self.x += math.cos(self.theta) * self.speed  # * distance
+            self.y += math.sin(self.theta) * self.speed  # * distance
+            self.barrel_x = self.x + math.cos(self.theta) * self.height
+            self.barrel_y = self.y + math.sin(self.theta) * self.height
             self.nozzle_x = self.x - math.cos(self.theta) * self.height
             self.nozzle_y = self.y - math.sin(self.theta) * self.height
 

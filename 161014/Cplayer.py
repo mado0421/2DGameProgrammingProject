@@ -26,7 +26,7 @@ class Player:
             self.speed = 3.5
             self.dtheta = 4.5
             self.bullet_type = self.ROUND
-            self.fire_rate = 10
+            self.fire_rate = 30
         if kind is self.CHAR2:
             self.x, self.y = 600, 300
             self.width = 18
@@ -34,7 +34,7 @@ class Player:
             self.speed = 3.2
             self.dtheta = 4.0
             self.bullet_type = self.LONG
-            self.fire_rate = 15
+            self.fire_rate = 45
         self.barrel_x = self.x + math.cos(self.theta) * self.height
         self.barrel_y = self.y + math.sin(self.theta) * self.height
         self.nozzle_x = self.x - math.cos(self.theta) * self.height
@@ -63,7 +63,8 @@ class Player:
             return True
 
     def isOut(self, cw, ch, cb):
-        if self.x > cw - cb or self.x < cb or self.y > ch - cb or self.y < cb:
+        if self.x + self.width > cw - cb or self.x - self.width < cb or\
+            self.y + self.height > ch - cb or self.y - self.height < cb:
             return True
 
     def draw(self):
