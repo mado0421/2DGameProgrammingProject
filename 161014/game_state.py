@@ -1,8 +1,8 @@
 from pico2d import *
 import random
-import Cplayer
+import CPlayer
 import CBullet
-import Cparticle
+import CParticle
 import CEnemy
 import game_framework
 
@@ -15,6 +15,7 @@ bullet_list = []
 particle_list = []
 canvas_width = 1280
 canvas_height = 800
+canvas_boundary = 80
 
 
 def enter():
@@ -24,7 +25,7 @@ def enter():
     time = 0
     open_canvas(canvas_width, canvas_height, sync=True)
     back_image = load_image('resource/image/back_gamestate.png')
-    player0 = Cplayer.Player(1)
+    player0 = CPlayer.Player(1)
 
 
 def exit():
@@ -39,29 +40,38 @@ def exit():
 
 def update():
     global time, enemy_list
+
     player0.update()
+    if player0.isOut(canvas_width, canvas_height, canvas_boundary):
+        game_framework.quit()
+
     if time % 3 is 0:
-        particle_list.append(Cparticle.Particle(player0.nozzle_x, player0.nozzle_y, 5))
+        particle_list.append(CParticle.Particle(player0.nozzle_x, player0.nozzle_y, 5))
     if time % player0.fire_rate is 0:
         bullet_list.append(CBullet.Bullet(player0))
     if time % 100 is 0:
-        enemy_list.append(CEnemy.Enemy(random.randint(0, 1)))
+        # enemy_list.append(CEnemy.Enemy(random.randint(0, 2)))
+        enemy_list.append(CEnemy.Enemy(random.randint(2, 3)))
+
 
     if bullet_list.count is not 0:
         for bullet in bullet_list:
             bullet.update()
-            if bullet.x > canvas_width - 80 or bullet.x < 80 or bullet.y > canvas_height - 80 or bullet.y < 80:
+            if bullet.isOut(canvas_width, canvas_height, canvas_boundary):
                 bullet_list.remove(bullet)
-    if particle_list.count is not 0:
-        for par in particle_list:
-            par.update()
-            if par.cursize <= 0:
-                particle_list.remove(par)
     if enemy_list.count is not 0:
         for enemy in enemy_list:
             enemy.update()
             if not (0 - enemy.width <= enemy.x <= canvas_width + enemy.width):
                 enemy_list.remove(enemy)
+            if (enemy.kind is enemy.SHIP or enemy.kind is enemy.F_SHIP) and time % 3 is 0:
+                particle_list.append(CParticle.Particle(enemy.nozzle_x, enemy.nozzle_y, 5))
+    if particle_list.count is not 0:
+        for par in particle_list:
+            par.update()
+            if par.isEnd() or par.isOut(canvas_width, canvas_height, canvas_boundary):
+                particle_list.remove(par)
+
 
     time += 1
     delay(0.01)
@@ -69,7 +79,8 @@ def update():
 
 def draw():
     clear_canvas()
-    back_image.draw(canvas_width/2, canvas_height/2)
+    # back_image.draw(canvas_width/2, canvas_height/2)
+    back_image.clip_draw(canvas_boundary, 0, canvas_width - 2 * canvas_boundary, canvas_height, canvas_width/2, canvas_height/2)
     # player.draw()
     if enemy_list.count is not 0:
         for enemy in enemy_list:
@@ -80,6 +91,8 @@ def draw():
     if particle_list.count is not 0:
         for par in particle_list:
             par.draw()
+    back_image.clip_draw(0, 0, canvas_boundary, canvas_height, canvas_boundary / 2, canvas_height/2)
+    back_image.clip_draw(canvas_width - canvas_boundary, 0, canvas_boundary, canvas_height, canvas_width - canvas_boundary / 2, canvas_height/2)
     player0.draw()
     update_canvas()
 

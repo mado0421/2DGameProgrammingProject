@@ -16,6 +16,10 @@ class Bullet:
         # if Bullet.image is None:
             # Bullet.image = load_image('resource/image/bullet%d.png' % self.kind)
 
+    def isOut(self, cw, ch, cb):
+        if self.x > cw - cb or self.x < cb or self.y > ch - cb or self.y < cb:
+            return True
+
     def update(self):
         self.x += math.cos(self.theta) * self.speed
         self.y += math.sin(self.theta) * self.speed

@@ -57,8 +57,13 @@ class Player:
         self.nozzle_x = self.x - math.cos(self.theta) * self.height
         self.nozzle_y = self.y - math.sin(self.theta) * self.height
 
+    def isOut(self, cw, ch, cb):
+        if self.x > cw - cb or self.x < cb or self.y > ch - cb or self.y < cb:
+            return True
+
     def draw(self):
         self.image.rotate_draw(self.theta - math.radians(90), self.x, self.y, None, None)
+        draw_rectangle(self.x - self.width, self.y - self.height, self.x + self.width, self.y + self.height)
 
     def handle_event(self, event):
         if(event.type, event.key) == (SDL_KEYDOWN, SDLK_a):
