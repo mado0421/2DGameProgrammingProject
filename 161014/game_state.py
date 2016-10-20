@@ -56,12 +56,14 @@ def update():
     if bullet_list.count is not 0:
         for bullet in bullet_list:
             bullet.update()
-            if bullet.isOut(canvas_width, canvas_height, canvas_boundary) or bullet.isCollide(player0):
-                bullet_list.remove(bullet)
             if enemy_list.count is not 0:
                 for enemy in enemy_list:
                     if bullet.isCollide(enemy):
                         bullet_list.remove(bullet)
+                        continue
+            if bullet.isOut(canvas_width, canvas_height, canvas_boundary) or bullet.isCollide(player0):
+                bullet_list.remove(bullet)
+
     if enemy_list.count is not 0:
         for enemy in enemy_list:
             enemy.update()
@@ -69,12 +71,12 @@ def update():
                 enemy_list.remove(enemy)
             if (enemy.kind is enemy.SHIP or enemy.kind is enemy.F_SHIP) and time % 3 is 0:
                 particle_list.append(CParticle.Particle(enemy.nozzle_x, enemy.nozzle_y, 5))
+
     if particle_list.count is not 0:
         for par in particle_list:
             par.update()
             if par.isEnd() or par.isOut(canvas_width, canvas_height, canvas_boundary):
                 particle_list.remove(par)
-
 
     time += 1
     delay(0.01)

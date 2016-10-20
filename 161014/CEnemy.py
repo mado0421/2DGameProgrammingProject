@@ -48,6 +48,9 @@ class Enemy:
         self.nozzle_x = self.x - math.cos(self.theta) * self.height
         self.nozzle_y = self.y - math.sin(self.theta) * self.height
 
+    def Set_Theta(self, other):
+        self.x
+
     def isDead(self):
         if self.health <= 0:
             return True
