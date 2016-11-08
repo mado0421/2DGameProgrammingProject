@@ -1,7 +1,6 @@
 from pico2d import *
-import select_state
 
-name = "MainState"
+name = "OpeningState"
 back_image = None
 canvas_width = 1280
 canvas_height = 800

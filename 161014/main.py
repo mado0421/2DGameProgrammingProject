@@ -1,5 +1,4 @@
 import game_framework
-import game_state
-
+from states import game_state
 
 game_framework.run(game_state)

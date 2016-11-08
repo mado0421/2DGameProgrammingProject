@@ -1,9 +1,12 @@
-from pico2d import *
 import random
-import CPlayer
-import CBullet
-import CParticle
-import CEnemy
+
+from classes import CPlayer
+from classes import CBullet
+from classes import CButton
+from classes import CEnemy
+from classes import CParticle
+from pico2d import *
+
 import game_framework
 
 name = "GameState"
@@ -25,7 +28,8 @@ def enter():
     time = 0
     open_canvas(canvas_width, canvas_height, sync=True)
     back_image = load_image('resource/image/back_gamestate.png')
-    player0 = CPlayer.Player(0)
+
+    player0 = CPlayer.Player(1)
 
 
 def exit():

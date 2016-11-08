@@ -17,7 +17,7 @@ class Bullet:
         elif self.kind is self.LONG:
             self.speed = 6.7
             self.width = 2
-            self.damage = 1
+            self.damage = 2
 
         self.image = load_image('resource/image/bullet%d.png' % self.kind)
         # if Bullet.image is None:
