@@ -1,4 +1,7 @@
 import game_framework
-from states import game_state
+import pico2d
+from states import test_state
 
-game_framework.run(game_state)
+pico2d.open_canvas()
+game_framework.run(test_state)
+pico2d.close_canvas()

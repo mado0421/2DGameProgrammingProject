@@ -1,3 +1,6 @@
+import pico2d
+
+
 class GameState:
     def __init__(self, state):
         self.enter = state.enter
@@ -38,8 +41,7 @@ class TestGameState:
 
 running = None
 stack = None
-# current_time =None
-
+current_time = 0
 
 def change_state(state):
     global stack
@@ -74,19 +76,27 @@ def quit():
     running = False
 
 
+def get_frame_time():
+
+    global current_time
+
+    frame_time = pico2d.get_time() - current_time
+    current_time += frame_time
+    return frame_time
+
+
 def run(start_state):
-    global running, stack # , current_time
-    # current_time = get_time()
+    global running, stack
+    current_time = pico2d.get_time()
     running = True
     stack = [start_state]   # 스택을 리스트로 구현함
     start_state.enter()     # 현재 상태의 enter()를 호출함
     while (running):
-        # frame_time = get_frame_time()
-        stack[-1].handle_events()   # 스택의 마지막 상태의 ~()를 호출함
-        stack[-1].update()          # update()에서 상태를 바꿔주는걸 넣어놓기 때문에 이 때 바뀜
+        frame_time = get_frame_time()
+        stack[-1].handle_events(frame_time)   # 스택의 마지막 상태의 ~()를 호출함
+        stack[-1].update(frame_time)          # update()에서 상태를 바꿔주는걸 넣어놓기 때문에 이 때 바뀜
 
         stack[-1].draw()
-
         # frame_time = get_time() - current_time
         # frame_rate = 1.0 / frame_time
         # print("Frame Rate: %f fps, Frame Time: %f sec, " %(frame_rate, frame_time))
