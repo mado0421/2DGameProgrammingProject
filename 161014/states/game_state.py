@@ -22,8 +22,9 @@ font = 0
 score_time = 0
 
 def enter():
-    global player0, back_image, time, enemy_list, bullet_list, particle_list, score_time, font
+    global player0, back_image, time, score, enemy_list, bullet_list, particle_list, score_time, font
     time = 0
+    score = 0
     score_time = 0
     back_image = load_image('resource/image/back_gamestate.png')
     font = load_font('resource/font/RPGSystem.ttf', 30)
