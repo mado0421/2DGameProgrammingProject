@@ -1,7 +1,6 @@
 import pico2d
 from classes import CTest
 from classes import CTest_timer
-from classes import CParticle
 
 name = "TestState"
 Test_obj = None
