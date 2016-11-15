@@ -18,22 +18,26 @@ particle_list = None
 canvas_boundary = 80
 score = 0
 time = 0
+font = 0
+score_time = 0
 
 def enter():
-    global player0, back_image, time, enemy_list, bullet_list, particle_list
+    global player0, back_image, time, enemy_list, bullet_list, particle_list, score_time, font
     time = 0
+    score_time = 0
     back_image = load_image('resource/image/back_gamestate.png')
+    font = load_font('resource/font/RPGSystem.ttf', 30)
 
     enemy_list = []
     bullet_list = []
     particle_list = []
-    player0 = CPlayer.Player(1)
+    player0 = CPlayer.Player(0)
 
 
 def exit():
-    global player0, bullet_list, particle_list, enemy_list
+    global player0, bullet_list, particle_list, enemy_list, font
 
-    f = open('data_file.txt', 'r')
+    f = open('data_score_file.txt', 'r')
     score_data = json.load(f)
     f.close()
 
@@ -41,7 +45,19 @@ def exit():
 
     print(score_data)
 
-    f = open('data_file.txt', 'w')
+    f = open('data_score_file.txt', 'w')
+    json.dump(score_data, f)
+    f.close()
+
+    f = open('data_time_file.txt', 'r')
+    score_data = json.load(f)
+    f.close()
+
+    score_data.append({"Score": score_time})
+
+    print(score_data)
+
+    f = open('data_time_file.txt', 'w')
     json.dump(score_data, f)
     f.close()
 
@@ -50,10 +66,11 @@ def exit():
     del(bullet_list)
     del(particle_list)
     del(enemy_list)
+    del(font)
 
 
 def update(frame_time):
-    global player0, time, enemy_list, score, enemy_list, bullet_list, particle_list
+    global player0, time, enemy_list, score, enemy_list, bullet_list, particle_list, score_time
 
     player0.update()
 
@@ -96,6 +113,7 @@ def update(frame_time):
                 particle_list.remove(par)
 
     time += 1
+    score_time += 0.01
     delay(0.01)
     if player0.isOut(get_canvas_width(), get_canvas_height(), canvas_boundary) or player0.isDead():
         game_framework.change_state(ranking_state)
@@ -107,6 +125,8 @@ def draw():
     # back_image.draw(canvas_width/2, canvas_height/2)
     back_image.clip_draw(canvas_boundary, 0, get_canvas_width() - 2 * canvas_boundary, get_canvas_height(), get_canvas_width()/2, get_canvas_height()/2)
     # player.draw()
+    font.draw(get_canvas_width()/2 - 150, get_canvas_height()/2 + 340, 'SCORE: %5.1d' % score, (230, 230, 255))
+    font.draw(get_canvas_width()/2 + 50, get_canvas_height()/2 + 340, 'TIME: %5.1f' % score_time, (230, 230, 255))
     if enemy_list.count is not 0:
         for enemy in enemy_list:
             enemy.draw()

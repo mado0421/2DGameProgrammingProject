@@ -46,4 +46,4 @@ class Bullet:
 
     def draw(self):
         self.image.rotate_draw(self.theta - math.radians(90), self.x, self.y, None, None)
-        draw_rectangle(self.x - self.width, self.y - self.width, self.x + self.width, self.y + self.width)
+        #draw_rectangle(self.x - self.width, self.y - self.width, self.x + self.width, self.y + self.width)
