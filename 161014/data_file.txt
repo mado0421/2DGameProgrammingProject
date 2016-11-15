@@ -1,0 +1,1 @@
+[{"Score": 0}, {"Score": 0}, {"Score": 0}, {"Score": 0}, {"Score": 170}, {"Score": 5160}, {"Score": 7670}, {"Score": 7670}, {"Score": 290}, {"Score": 3890}, {"Score": 30}]
