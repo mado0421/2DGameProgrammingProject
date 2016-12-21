@@ -18,7 +18,7 @@ class Particle:
 
     def update(self):
         self.cursize -= 0.1
-        self.image.opacify(self.cursize / self.maxsize)
 
     def draw(self):
+        self.image.opacify((self.cursize / self.maxsize))
         self.image.rotate_draw(self.theta, self.x, self.y, self.cursize, self.cursize)
