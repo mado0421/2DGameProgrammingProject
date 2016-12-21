@@ -13,7 +13,7 @@ class Asteroid(CObject.Object):
         self.x = get_canvas_width() * self.way
         self.y = random.randint(0, get_canvas_height())
         self.size = 16
-        self.speed = 5
+        self.speed = 100
         self.team = 0
 
     def update(self, frame_time):

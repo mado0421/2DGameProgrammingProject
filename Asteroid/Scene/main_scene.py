@@ -1,28 +1,24 @@
 from pico2d import *
 import game_framework
-from Object import CAsteroid
+from Scene import play_scene
 
-asteroid = []
-time = None
+num_player = None
 
 def enter():
-    global time
-    time = 0
+    global num_player
+    num_player = 0
     pass
 
 
 def exit():
+    f = open('game_data.txt', 'w')
+    json.dump(num_player, f)
+    f.close()
     pass
 
 
 def update(frame_time):
-    global time
-    if (time + frame_time) > 1:
-        print(time)
-    time = (time + frame_time) % 1.0
-    # print(time)
-
-    # print(frame_time)
+    print(frame_time)
     pass
 
 
@@ -32,15 +28,15 @@ def draw():
 
 
 def handle_events(frame_time):
+    global num_player
     events = get_events()
     for event in events:
-        if event.type is SDL_QUIT:
-            game_framework.quit()
-        elif event.type is SDL_KEYDOWN and event.key is SDLK_ESCAPE:
-            print(frame_time)
-            game_framework.quit()
-        else:
-            pass
+        if event.type == SDL_KEYDOWN:
+            if event.key == SDLK_a:
+                num_player = 1
+            elif event.key == SDLK_s:
+                num_player = 2
+            game_framework.change_state(play_scene)
 
 
 def pause():

@@ -1,4 +1,6 @@
 from pico2d import draw_rectangle
+from pico2d import get_canvas_width
+from pico2d import get_canvas_height
 
 
 class Object:
@@ -22,4 +24,13 @@ class Object:
                 if self.y - self.size < other.y + other.size and\
                         self.y + self.size > other.y - other.size:
                     return True
+        return False
+
+    def check_out(self):
+        if get_canvas_width() < self.x - self.size or\
+                self.x + self.size < 0:
+            return True
+        if get_canvas_height() < self.y - self.size or\
+                self.y + self.size < 0:
+            return True
         return False

@@ -1,5 +1,6 @@
 import game_framework
 import pico2d
+from Scene import play_scene
 from Scene import main_scene
 
 pico2d.open_canvas(1280, 720)
