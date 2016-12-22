@@ -29,16 +29,18 @@ class Object:
         return False
 
     def check_out(self):
-        if get_canvas_width() < self.x - self.size or\
-                self.x + self.size < 0:
+        if get_canvas_width() - 50 < self.x - self.size or\
+                self.x + self.size < 50:
             return True
-        if get_canvas_height() < self.y - self.size or\
-                self.y + self.size < 0:
+        if get_canvas_height() - 50 < self.y - self.size or\
+                self.y + self.size < 50:
             return True
         return False
 
     def check_dead(self):
         if self.health <= 0:
-            self.live = False
             return True
         return False
+
+    def hit(self, other):
+        self.health -= other.damage

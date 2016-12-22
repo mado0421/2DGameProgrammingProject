@@ -21,17 +21,22 @@ class Player(CObject.Object):
 
         self.theta = math.radians(90)
         if ship_kind is self.ship1:
-            self.dtheta = 0.8
+            self.speed = 200
+            self.dtheta = 0.5
+            self.img = load_image('Resource/image/ship0.png')
         elif ship_kind is self.ship2:
-            self.dtheta = 0.7
-        self.live = True
+            self.speed = 170
+            self.dtheta = 0.8
+            self.img = load_image('Resource/image/ship1.png')
+
         self.way = self.forward
-        self.bullet = self.default
+        self.bullet = self.round
         self.fire_rate = 0.8
         self.fire_timer = 0
         self.size = 10
-        self.speed = 200
         self.team = 1
+        self.damage = 10
+        self.health = 1
         self.barrel = [self.x + math.cos(self.theta) * self.size, self.y + math.sin(self.theta) * self.size]
 
     def update(self, frame_time):
@@ -69,3 +74,7 @@ class Player(CObject.Object):
             elif (event.type, event.key) == (SDL_KEYUP, SDLK_l):
                 if self.way is self.right:
                     self.way = self.forward
+
+    def draw(self):
+        self.img.rotate_draw(self.theta - math.radians(90), self.x, self.y, None, None)
+        draw_rectangle(self.x - self.size, self.y - self.size, self.x + self.size, self.y + self.size)
