@@ -15,6 +15,8 @@ class Plane(CObject.Object):
         self.size = 10
         self.speed = 200
         self.team = 0
+        self.health = 2
+        self.damage = 10
 
     def update(self, frame_time):
         if self.way is self.left:

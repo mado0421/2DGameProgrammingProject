@@ -15,6 +15,8 @@ class Asteroid(CObject.Object):
         self.size = 16
         self.speed = 100
         self.team = 0
+        self.health = 4
+        self.damage = 10
 
     def update(self, frame_time):
         if self.way is self.left:

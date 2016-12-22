@@ -3,9 +3,11 @@ import game_framework
 from Object import CPlane
 from Object import CPlayer
 from Object import CAsteroid
+from Object import CBullet
 
 
 player_list = []
+bullet_list = []
 asteroid_list = []
 plane_list = []
 time = None
@@ -17,8 +19,9 @@ plane_timer = None
 def enter():
     global font
     global time, asteroid_timer, plane_timer
-    global asteroid_list, plane_list, player_list
+    global asteroid_list, plane_list, player_list, bullet_list
     player_list = []
+    bullet_list = []
     asteroid_list = []
     plane_list = []
     time = 0
@@ -73,7 +76,7 @@ def update(frame_time):
     if len(plane_list) is not 0:
         for plane in plane_list:
             plane.update(frame_time)
-            if plane.check_out():
+            if plane.check_out() or plane.check_dead():
                 plane_list.remove(plane)
 
     pass

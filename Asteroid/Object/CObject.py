@@ -10,6 +10,8 @@ class Object:
         self.y = 0
         self.size = 0
         self.team = 0
+        self.health = 1
+        self.live = True
 
     def draw(self):
         draw_rectangle(self.x - self.size, self.y - self.size, self.x + self.size, self.y + self.size)
@@ -23,6 +25,7 @@ class Object:
                     self.x + self.size > other.x - other.size:
                 if self.y - self.size < other.y + other.size and\
                         self.y + self.size > other.y - other.size:
+                    self.health -= other.damage
                     return True
         return False
 
@@ -32,5 +35,11 @@ class Object:
             return True
         if get_canvas_height() < self.y - self.size or\
                 self.y + self.size < 0:
+            return True
+        return False
+
+    def check_dead(self):
+        if self.health <= 0:
+            self.live = False
             return True
         return False

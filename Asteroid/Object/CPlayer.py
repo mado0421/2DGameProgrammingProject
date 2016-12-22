@@ -29,7 +29,7 @@ class Player(CObject.Object):
         self.bullet = self.default
         self.size = 10
         self.speed = 200
-        self.team = 0
+        self.team = 1
 
     def update(self, frame_time):
 
@@ -42,7 +42,6 @@ class Player(CObject.Object):
         self.y += math.sin(self.theta) * self.speed * frame_time
 
     def handle_events(self, event):
-
         if self.num_player is self.p1 or self.num_player is self.solo:
             if (event.type, event.key) == (SDL_KEYDOWN, SDLK_a):
                 self.way = self.left
