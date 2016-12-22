@@ -30,6 +30,7 @@ def enter():
         pass
     elif num_player is 2:
         pass
+    print(num_player)
 
     pass
 
@@ -45,8 +46,6 @@ def update(frame_time):
     time += frame_time
     asteroid_timer += frame_time
     plane_timer += frame_time
-    print(int(time) % 10)
-    # print(time)
 
     if asteroid_timer > 1.0:
         asteroid_timer = 0
@@ -55,9 +54,6 @@ def update(frame_time):
     if plane_timer > 1.5:
         plane_timer = 0
         plane_list.append(CPlane.Plane())
-
-    # if second is not int(time):
-        # asteroid_list.append(CAsteroid.Asteroid())
 
     if len(asteroid_list) is not 0:
         for asteroid in asteroid_list:
@@ -71,7 +67,6 @@ def update(frame_time):
             if plane.check_out():
                 plane_list.remove(plane)
 
-    # print(frame_time)
     pass
 
 
