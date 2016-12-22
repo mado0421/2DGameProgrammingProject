@@ -1,8 +1,11 @@
 from pico2d import *
 import game_framework
-from Object import CAsteroid
 from Object import CPlane
+from Object import CPlayer
+from Object import CAsteroid
 
+
+player_list = []
 asteroid_list = []
 plane_list = []
 time = None
@@ -14,7 +17,8 @@ plane_timer = None
 def enter():
     global font
     global time, asteroid_timer, plane_timer
-    global asteroid_list, plane_list
+    global asteroid_list, plane_list, player_list
+    player_list = []
     asteroid_list = []
     plane_list = []
     time = 0
@@ -27,9 +31,10 @@ def enter():
     f.close()
 
     if num_player is 1:
-        pass
+        player_list.append(CPlayer.Player(0, 0))
     elif num_player is 2:
-        pass
+        player_list.append(CPlayer.Player(1, 0))
+        player_list.append(CPlayer.Player(2, 1))
     print(num_player)
 
     pass
@@ -55,6 +60,10 @@ def update(frame_time):
         plane_timer = 0
         plane_list.append(CPlane.Plane())
 
+    if len(player_list) is not 0:
+        for player in player_list:
+            player.update(frame_time)
+
     if len(asteroid_list) is not 0:
         for asteroid in asteroid_list:
             asteroid.update(frame_time)
@@ -74,6 +83,10 @@ def draw():
     clear_canvas()
 
     font.draw(get_canvas_width()/2 - 90, get_canvas_height()/2 + 290, 'Plane: %5.1d' % len(plane_list), (230, 230, 255))
+
+    if len(player_list) is not 0:
+        for player in player_list:
+            player.draw()
 
     if len(asteroid_list) is not 0:
         for asteroid in asteroid_list:
@@ -95,7 +108,9 @@ def handle_events(frame_time):
             print(frame_time)
             game_framework.quit()
         else:
-            pass
+            if len(player_list) is not 0:
+                for player in player_list:
+                    player.handle_events(event)
 
 
 def pause():
