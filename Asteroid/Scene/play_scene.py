@@ -5,13 +5,15 @@ from Object import CPlane
 from Object import CPlayer
 from Object import CAsteroid
 from Object import CBullet
+from Object import CParticle
 import random
 
-
+particle_list = []
 player_list = []
 bullet_list = []
 asteroid_list = []
 plane_list = []
+score = 0
 time = None
 font = None
 asteroid_timer = None
@@ -21,38 +23,63 @@ back_img = None
 
 def enter():
     global font, back_img
-    global time, asteroid_timer, plane_timer
-    global asteroid_list, plane_list, player_list, bullet_list
+    global time, asteroid_timer, plane_timer, score
+    global asteroid_list, plane_list, player_list, bullet_list, particle_list
+    particle_list = []
     player_list = []
     bullet_list = []
     asteroid_list = []
     plane_list = []
     time = 0
+    score = 0
     asteroid_timer = 0
     plane_timer = 0
     font = load_font('Resource/font/RPGSystem.ttf', 50)
     back_img = load_image('resource/image/backimg.png')
 
     f = open('game_data.txt', 'r')
-    num_player = json.load(f)
+    game_data = json.load(f)
     f.close()
 
-    if num_player is 1:
-        player_list.append(CPlayer.Player(0, 0))
-    elif num_player is 2:
-        player_list.append(CPlayer.Player(1, 0))
-        player_list.append(CPlayer.Player(2, 1))
-    print(num_player)
+    if game_data[0] is 1:
+        player_list.append(CPlayer.Player(0, game_data[1]))
+    elif game_data[0] is 2:
+        player_list.append(CPlayer.Player(1, game_data[1]))
+        player_list.append(CPlayer.Player(2, game_data[2]))
 
 
 def exit():
-    global asteroid_list, plane_list
+
+    f = open('data_score_file.txt', 'r')
+    score_data = json.load(f)
+    f.close()
+
+    score_data.append({"Score": score})
+
+    print(score_data)
+
+    f = open('data_score_file.txt', 'w')
+    json.dump(score_data, f)
+    f.close()
+
+    f = open('data_time_file.txt', 'r')
+    score_data = json.load(f)
+    f.close()
+
+    score_data.append({"Score": time})
+
+    print(score_data)
+
+    f = open('data_time_file.txt', 'w')
+    json.dump(score_data, f)
+    f.close()
+
     pass
 
 
 def update(frame_time):
-    global time, asteroid_timer, plane_timer
-    global asteroid_list, plane_list
+    global time, asteroid_timer, plane_timer, score
+    global asteroid_list, plane_list, particle_list
 
     time += frame_time
     asteroid_timer += frame_time
@@ -73,6 +100,10 @@ def update(frame_time):
         for player in player_list:
             if player.check_dead() is False:
                 player.update(frame_time)
+                player.particle_timer += frame_time
+                if player.particle_timer > 0.1:
+                    particle_list.append(CParticle.Particle(player.nozzle[0], player.nozzle[1], 10))
+                    player.particle_timer = 0
                 if player.check_out():
                     player_list.remove(player)
                 if len(asteroid_list) is not 0:
@@ -128,6 +159,7 @@ def update(frame_time):
     if len(asteroid_list) is not 0:
         for asteroid in asteroid_list:
             if asteroid.check_dead():
+                score += 10
                 asteroid_list.remove(asteroid)
             else:
                 asteroid.update(frame_time)
@@ -137,8 +169,13 @@ def update(frame_time):
     if len(plane_list) is not 0:
         for plane in plane_list:
             if plane.check_dead():
+                score += 10
                 plane_list.remove(plane)
             else:
+                plane.particle_timer += frame_time
+                if plane.particle_timer > 0.1:
+                    particle_list.append(CParticle.Particle(plane.nozzle[0], plane.nozzle[1], 10))
+                    plane.particle_timer = 0
                 if type(plane) is CPlane.Follow_Plane:
                     if plane.state is CPlane.Follow_Plane.follow:
                         if plane.timer > plane.change_to_follow_time:
@@ -155,11 +192,20 @@ def update(frame_time):
                 if plane.check_out() or plane.check_dead():
                     plane_list.remove(plane)
 
+    if len(particle_list) is not 0:
+        for particle in particle_list:
+            particle.update(frame_time)
+            if particle.check_dead():
+                particle_list.remove(particle)
+
 
 def draw():
     clear_canvas()
     back_img.draw(get_canvas_width()/2, get_canvas_height()/2)
-    font.draw(get_canvas_width()/2 - 90, get_canvas_height()/2 + 290, 'Plane: %5.1d' % len(plane_list), (230, 230, 255))
+    # font.draw(get_canvas_width()/2 - 90, get_canvas_height()/2 + 290, 'Plane: %5.1d' % len(plane_list), (230, 230, 255))
+
+    font.draw(get_canvas_width()/2 - 250, get_canvas_height()/2 + 340, 'SCORE: %5.1d' % score, (230, 230, 255))
+    font.draw(get_canvas_width()/2 + 50, get_canvas_height()/2 + 340, 'TIME: %5.1f' % time, (230, 230, 255))
 
     if len(player_list) is not 0:
         for player in player_list:
@@ -176,6 +222,10 @@ def draw():
     if len(plane_list) is not 0:
         for plane in plane_list:
             plane.draw()
+
+    if len(particle_list) is not 0:
+        for particle in particle_list:
+            particle.draw()
 
     update_canvas()
 

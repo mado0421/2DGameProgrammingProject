@@ -21,6 +21,7 @@ class Plane(CObject.Object):
         self.img = load_image('Resource/image/enemy2.png')
         self.size = 20
         self.speed = 80
+        self.particle_timer = 0
         self.team = 0
         self.health = 2
         self.damage = 10
@@ -35,7 +36,7 @@ class Plane(CObject.Object):
 
     def draw(self):
         self.img.rotate_draw(self.theta - math.radians(90), self.x, self.y, None, None)
-        draw_rectangle(self.x - self.size, self.y - self.size, self.x + self.size, self.y + self.size)
+        # draw_rectangle(self.x - self.size, self.y - self.size, self.x + self.size, self.y + self.size)
 
 
 class Follow_Plane(Plane):

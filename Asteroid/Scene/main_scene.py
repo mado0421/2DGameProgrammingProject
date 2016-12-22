@@ -26,7 +26,7 @@ def enter():
 
 def exit():
     f = open('game_data.txt', 'w')
-    json.dump(num_player, f)
+    json.dump([num_player, 0, 0], f)
     f.close()
     pass
 
@@ -40,9 +40,9 @@ def draw():
     back_img.draw(get_canvas_width()/2, get_canvas_height()/2)
     font.draw(get_canvas_width()/2 - 400, get_canvas_height()/2 - 50, 'LOCAL SINGLE PLAY', (200, 200, 255))
     font.draw(get_canvas_width()/2 - 400, get_canvas_height()/2 - 100, 'LOCAL MULTI PLAY', (200, 200, 255))
-    font.draw(get_canvas_width()/2 - 400, get_canvas_height()/2 - 150, 'OPTION', (200, 200, 255))
-    font.draw(get_canvas_width()/2 - 400, get_canvas_height()/2 - 200, 'RANK', (200, 200, 255))
-    font.draw(get_canvas_width()/2 - 400, get_canvas_height()/2 - 250, 'QUIT', (200, 200, 255))
+    font.draw(get_canvas_width()/2 - 400, get_canvas_height()/2 - 150, 'RANK', (200, 200, 255))
+    font.draw(get_canvas_width()/2 - 400, get_canvas_height()/2 - 200, 'QUIT', (200, 200, 255))
+    # font.draw(get_canvas_width()/2 - 400, get_canvas_height()/2 - 250, 'QUIT', (200, 200, 255))
 
     if select is not 0:
         highlight_img.draw(get_canvas_width() / 2 - 200, get_canvas_height()/2 - 50 * select)
@@ -58,21 +58,19 @@ def handle_events(frame_time):
             game_framework.quit()
         elif event.type == SDL_KEYDOWN:
             if event.key == SDLK_DOWN:
-                select = clamp(1, select + 1, 5)
+                select = clamp(1, select + 1, 4)
             elif event.key == SDLK_UP:
-                select = clamp(1, select - 1, 5)
+                select = clamp(1, select - 1, 4)
             elif event.key == SDLK_RETURN:
                 if select is 1:
                     num_player = 1
-                    game_framework.change_state(play_scene)
+                    game_framework.change_state(character_scene)
                 elif select is 2:
                     num_player = 2
                     game_framework.change_state(character_scene)
                 elif select is 3:
-                    game_framework.change_state(option_scene)
-                elif select is 4:
                     game_framework.change_state(rank_scene)
-                elif select is 5:
+                elif select is 4:
                     game_framework.quit()
             if event.key == SDLK_ESCAPE:
                 game_framework.quit()

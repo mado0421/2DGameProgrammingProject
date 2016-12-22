@@ -39,4 +39,4 @@ class Bullet(CObject.Object):
 
     def draw(self):
         self.img.rotate_draw(self.theta - math.radians(90), self.x, self.y, None, None)
-        draw_rectangle(self.x - self.size, self.y - self.size, self.x + self.size, self.y + self.size)
+        # draw_rectangle(self.x - self.size, self.y - self.size, self.x + self.size, self.y + self.size)

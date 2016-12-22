@@ -1,5 +1,6 @@
 from pico2d import *
 from Object import CObject
+import random
 
 
 class Player(CObject.Object):
@@ -30,14 +31,21 @@ class Player(CObject.Object):
             self.img = load_image('Resource/image/ship1.png')
 
         self.way = self.forward
-        self.bullet = self.round
-        self.fire_rate = 0.8
+        self.bullet = random.randint(0, 2)
+        if self.bullet is self.default:
+            self.fire_rate = 0.3
+        elif self.bullet is self.long:
+            self.fire_rate = 0.5
+        elif self.bullet is self.round:
+            self.fire_rate = 0.8
         self.fire_timer = 0
         self.size = 10
         self.team = 1
+        self.particle_timer = 0
         self.damage = 10
         self.health = 1
         self.barrel = [self.x + math.cos(self.theta) * self.size, self.y + math.sin(self.theta) * self.size]
+        self.nozzle = [self.x - math.cos(self.theta) * self.size, self.y - math.sin(self.theta) * self.size]
 
     def update(self, frame_time):
 
@@ -49,6 +57,7 @@ class Player(CObject.Object):
         self.x += math.cos(self.theta) * self.speed * frame_time
         self.y += math.sin(self.theta) * self.speed * frame_time
         self.barrel = [self.x + math.cos(self.theta) * self.size, self.y + math.sin(self.theta) * self.size]
+        self.nozzle = [self.x - math.cos(self.theta) * self.size, self.y - math.sin(self.theta) * self.size]
         self.fire_timer += frame_time
 
     def handle_events(self, event):
@@ -77,4 +86,4 @@ class Player(CObject.Object):
 
     def draw(self):
         self.img.rotate_draw(self.theta - math.radians(90), self.x, self.y, None, None)
-        draw_rectangle(self.x - self.size, self.y - self.size, self.x + self.size, self.y + self.size)
+        # draw_rectangle(self.x - self.size, self.y - self.size, self.x + self.size, self.y + self.size)
