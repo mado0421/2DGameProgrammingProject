@@ -25,7 +25,6 @@ class Object:
                     self.x + self.size > other.x - other.size:
                 if self.y - self.size < other.y + other.size and\
                         self.y + self.size > other.y - other.size:
-                    self.health -= other.damage
                     return True
         return False
 

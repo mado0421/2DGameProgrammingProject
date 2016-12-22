@@ -24,12 +24,15 @@ class Player(CObject.Object):
             self.dtheta = 0.8
         elif ship_kind is self.ship2:
             self.dtheta = 0.7
-
+        self.live = True
         self.way = self.forward
         self.bullet = self.default
+        self.fire_rate = 0.8
+        self.fire_timer = 0
         self.size = 10
         self.speed = 200
         self.team = 1
+        self.barrel = [self.x + math.cos(self.theta) * self.size, self.y + math.sin(self.theta) * self.size]
 
     def update(self, frame_time):
 
@@ -40,6 +43,8 @@ class Player(CObject.Object):
 
         self.x += math.cos(self.theta) * self.speed * frame_time
         self.y += math.sin(self.theta) * self.speed * frame_time
+        self.barrel = [self.x + math.cos(self.theta) * self.size, self.y + math.sin(self.theta) * self.size]
+        self.fire_timer += frame_time
 
     def handle_events(self, event):
         if self.num_player is self.p1 or self.num_player is self.solo:

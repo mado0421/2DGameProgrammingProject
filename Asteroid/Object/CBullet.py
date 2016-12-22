@@ -7,8 +7,8 @@ class Bullet(CObject.Object):
     default, long, round = 0, 1, 2
 
     def __init__(self, gunner):
-        self.x = gunner.barrel.y
-        self.y = gunner.barrel.x
+        self.x = gunner.barrel[0]
+        self.y = gunner.barrel[1]
         if gunner.bullet is self.default:
             self.size = 5
             self.speed = 500

@@ -16,6 +16,7 @@ asteroid_timer = None
 plane_timer = None
 
 
+
 def enter():
     global font
     global time, asteroid_timer, plane_timer
@@ -65,7 +66,17 @@ def update(frame_time):
 
     if len(player_list) is not 0:
         for player in player_list:
-            player.update(frame_time)
+            if player.live is True:
+                player.update(frame_time)
+                if player.fire_timer > player.fire_rate:
+                    player.fire_timer = 0
+                    bullet_list.append(CBullet.Bullet(player))
+
+    if len(bullet_list) is not 0:
+        for bullet in bullet_list:
+            bullet.update(frame_time)
+            if bullet.check_out():
+                bullet_list.remove(bullet)
 
     if len(asteroid_list) is not 0:
         for asteroid in asteroid_list:
@@ -90,6 +101,10 @@ def draw():
     if len(player_list) is not 0:
         for player in player_list:
             player.draw()
+
+    if len(bullet_list) is not 0:
+        for bullet in bullet_list:
+            bullet.draw()
 
     if len(asteroid_list) is not 0:
         for asteroid in asteroid_list:
